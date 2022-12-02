@@ -40,7 +40,9 @@
             "deploy": [
                 {
                     "type": "database",
-                    "port": 3306
+                    "port": 3306,
+                    "user": "user",
+                    "password": "password"
                 }
             ]
         },
@@ -54,7 +56,9 @@
                     "type": "backend",
                     "port": 8080,
                     "database_ip": "10.0.3.10",
-                    "database_port": 3306
+                    "database_port": 3306,
+                    "database_user": "user",
+                    "database_password": "password"
                 }
             ]
         },
