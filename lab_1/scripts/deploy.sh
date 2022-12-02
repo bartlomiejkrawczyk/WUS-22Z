@@ -127,12 +127,17 @@ for VM in "${VIRTUAL_MACHINES[@]}"; do
             backend)
                 echo Setting up backend
 
+                DATABASE_ADDRESS=$(jq -r '.database_ip' <<< $SERVICE)
+                DATABASE_PORT=$(jq -r '.database_port' <<< $SERVICE)
+                DATABASE_USER=$(jq -r '.database_user' <<< $SERVICE)
+                DATABASE_PASSWORD=$(jq -r '.database_password' <<< $SERVICE)
+
                 az vm run-command invoke \
                     --resource-group $RESOURCE_GROUP \
                     --name $VM_NAME \
                     --command-id RunShellScript \
-                    --scripts 'echo $1 $2' \
-                    --parameters hello backend
+                    --scripts "@./rest/spring.sh" \
+                    --parameters "$SERVICE_PORT" "$DATABASE_ADDRESS" "$DATABASE_PORT" "$DATABASE_USER" "$DATABASE_PASSWORD"
             ;;
 
             database)
