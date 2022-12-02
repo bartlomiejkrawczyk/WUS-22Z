@@ -12,16 +12,17 @@ CONFIG_FILE="$1"
 
 echo $CONFIG_FILE
 
-RESOURCE_GROUP="$(jq -r '.resource_group' "$CONFIG_FILE")"
-
-echo $RESOURCE_GROUP
-
 # Instalation
 sudo apt-get update
 sudo apt-get upgrade -y
 
 sudo apt install jq -y
 sudo apt-get install azure-cli -y
+
+
+RESOURCE_GROUP="$(jq -r '.resource_group' "$CONFIG_FILE")"
+
+echo $RESOURCE_GROUP
 
 # Login
 az login
