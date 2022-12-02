@@ -135,12 +135,15 @@ for VM in "${VIRTUAL_MACHINES[@]}"; do
             database)
                 echo Setting up database
 
+                DATABASE_USER=$(jq -r '.user' <<< $SERVICE)
+                DATABASE_PASSWORD=$(jq -r '.password' <<< $SERVICE)
+
                 az vm run-command invoke \
                     --resource-group $RESOURCE_GROUP \
                     --name $VM_NAME \
                     --command-id RunShellScript \
-                    --scripts 'echo $1 $2' \
-                    --parameters hello database
+                    --scripts "@./mySql/sql.sh" \
+                    --parameters "$SERVICE_PORT" "$DATABASE_USER" "$DATABASE_PASSWORD"
             ;;
 
             *)
@@ -156,7 +159,7 @@ done
 # Delete
 az group delete --name $RESOURCE_GROUP -y
 
-# az network watcher connection-monitor delete --location westeurope --name NetworkWatcher_westeurope
+az group delete --name NetworkWatcherRG -y
 
 # Logout
 az logout
