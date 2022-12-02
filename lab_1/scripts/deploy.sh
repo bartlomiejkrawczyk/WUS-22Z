@@ -100,6 +100,9 @@ for VM in "${VIRTUAL_MACHINES[@]}"; do
         --public-ip-address "$VM_PUBLIC_IP_ADDRESS" \
         --image UbuntuLTS \
         --generate-ssh-keys
+        
+        # --data-disk-sizes-gb 10 \
+        # --size Standard_DS2_v2 \
     
     readarray -t DEPLOY < <(jq -c '.deploy[]' <<< $VM)
 
