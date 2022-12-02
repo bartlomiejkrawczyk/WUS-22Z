@@ -60,6 +60,7 @@
         },
         {
             "name": "frontendVM",
+            "subnet": "frontendSubnet",
             "private_ip_address": "10.0.1.10",
             "public_ip_address": "front",
             "deploy": [
