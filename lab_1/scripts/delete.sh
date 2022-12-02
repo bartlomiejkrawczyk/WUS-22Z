@@ -23,5 +23,7 @@ az login
 # Delete
 az group delete --name $RESOURCE_GROUP -y
 
+az group delete --name NetworkWatcherRG -y
+
 # Logout
 az logout
