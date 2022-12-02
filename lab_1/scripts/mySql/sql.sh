@@ -36,6 +36,7 @@ wget $POPULATE_DATABASE
 sed -i "s/DATABASE_PORT/$DATABASE_PORT/g" ./.my.cnf
 sed -i "s/DATABASE_USER/$DATABASE_USER/g" ./user.sql
 sed -i "s/DATABASE_PASSWORD/$DATABASE_PASSWORD/g" ./user.sql
+sed -i "1s/^/USE petclinic;\n/" ./populateDB.sql
 
 # Run sql
 cat ./user.sql | sudo mysql -f
