@@ -1,0 +1,75 @@
+{
+    "resource_group": "wusLabGroup",
+    "network": {
+        "address_prefix": "10.0.0.0/16"
+    },
+    "network_security_group": [
+        {
+            "name": "NSG",
+            "rule": []
+        }
+    ],
+    "subnet": [
+        {
+            "name": "frontendSubnet",
+            "address_prefix": "10.0.1.0/24",
+            "network_security_group": ""
+        },
+        {
+            "name": "backendSubnet",
+            "address_prefix": "10.0.2.0/24",
+            "network_security_group": ""
+        },
+        {
+            "name": "databaseSubnet",
+            "address_prefix": "10.0.3.0/24",
+            "network_security_group": ""
+        }
+    ],
+    "public_ip": [
+        {
+            "name": "front"
+        }
+    ],
+    "virtual_machine": [
+        {
+            "name": "databaseVM",
+            "subnet": "databaseSubnet",
+            "private_ip_address": "10.0.3.10",
+            "public_ip_address": "",
+            "deploy": [
+                {
+                    "type": "database",
+                    "port": 3306
+                }
+            ]
+        },
+        {
+            "name": "backendVM",
+            "subnet": "backendSubnet",
+            "private_ip_address": "10.0.2.10",
+            "public_ip_address": "",
+            "deploy": [
+                {
+                    "type": "backend",
+                    "port": 8080,
+                    "database_ip": "10.0.3.10",
+                    "database_port": 3306
+                }
+            ]
+        },
+        {
+            "name": "frontendVM",
+            "private_ip_address": "10.0.1.10",
+            "public_ip_address": "front",
+            "deploy": [
+                {
+                    "type": "frontend",
+                    "port": 80,
+                    "backend_ip": "10.0.2.10",
+                    "backend_port": 8080
+                }
+            ]
+        }
+    ]
+}
