@@ -116,12 +116,15 @@ for VM in "${VIRTUAL_MACHINES[@]}"; do
             frontend)
                 echo Setting up frontend
 
+                SERVER_IP=$(jq -r '.backend_ip' <<< $SERVICE)
+                SERVER_PORT=$(jq -r '.backend_port' <<< $SERVICE)
+
                 az vm run-command invoke \
                     --resource-group $RESOURCE_GROUP \
                     --name $VM_NAME \
                     --command-id RunShellScript \
-                    --scripts 'echo $1 $2' \
-                    --parameters hello frontend
+                    --scripts "@./angular/front.sh" \
+                    --parameters "$SERVER_IP" "$SERVER_PORT" "$SERVICE_PORT"
             ;;
 
             nginx)
@@ -216,15 +219,15 @@ for PUBLIC_IP in "${PUBLIC_IPS[@]}"; do
       --resource-group "$RESOURCE_GROUP" \
       --name "$PUBLIC_IP_NAME" \
       --query "ipAddress" \
-      --output tsv
+      --output tsv | echo
 done
 
 # Delete
-az group delete --name $RESOURCE_GROUP -y
+# az group delete --name $RESOURCE_GROUP -y
 
 # az group delete --name wusLabGroup -y
 
-az group delete --name NetworkWatcherRG -y
+# az group delete --name NetworkWatcherRG -y
 
 # Logout
 az logout
