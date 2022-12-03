@@ -59,7 +59,7 @@
         },
         {
             "name": "backendReplicasetVM",
-            "subnet": "backendReplicaSetSubnet",
+            "subnet": "backendSubnet",
             "private_ip_address": "10.0.2.10",
             "public_ip_address": "",
             "deploy": [
