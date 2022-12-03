@@ -124,6 +124,17 @@ for VM in "${VIRTUAL_MACHINES[@]}"; do
                     --parameters hello frontend
             ;;
 
+            nginx)
+                echo Setting up nginx
+
+                az vm run-command invoke \
+                    --resource-group $RESOURCE_GROUP \
+                    --name $VM_NAME \
+                    --command-id RunShellScript \
+                    --scripts 'echo $1' \
+                    --parameters "$SERVICE_PORT"
+            ;;
+
             backend)
                 echo Setting up backend
 
@@ -140,6 +151,24 @@ for VM in "${VIRTUAL_MACHINES[@]}"; do
                     --parameters "$SERVICE_PORT" "$DATABASE_ADDRESS" "$DATABASE_PORT" "$DATABASE_USER" "$DATABASE_PASSWORD"
             ;;
 
+            backend-replicaset)
+                echo Setting up backend with replicaset
+
+                DATABASE_MASTER_ADDRESS=$(jq -r '.database_master_ip' <<< $SERVICE)
+                DATABASE_MASTER_PORT=$(jq -r '.database_master_port' <<< $SERVICE)
+                DATABASE_SLAVE_ADDRESS=$(jq -r '.database_slave_ip' <<< $SERVICE)
+                DATABASE_SLAVE_PORT=$(jq -r '.database_slave_port' <<< $SERVICE)
+                DATABASE_USER=$(jq -r '.database_user' <<< $SERVICE)
+                DATABASE_PASSWORD=$(jq -r '.database_password' <<< $SERVICE)
+
+                az vm run-command invoke \
+                    --resource-group $RESOURCE_GROUP \
+                    --name $VM_NAME \
+                    --command-id RunShellScript \
+                    --scripts "@./rest/spring-replicaset.sh" \
+                    --parameters "$SERVICE_PORT" "$DATABASE_MASTER_ADDRESS" "$DATABASE_MASTER_PORT" "$DATABASE_SLAVE_ADDRESS" "$DATABASE_SLAVE_PORT" "$DATABASE_USER" "$DATABASE_PASSWORD"
+            ;;
+
             database)
                 echo Setting up database
 
@@ -152,6 +181,22 @@ for VM in "${VIRTUAL_MACHINES[@]}"; do
                     --command-id RunShellScript \
                     --scripts "@./mySql/sql.sh" \
                     --parameters "$SERVICE_PORT" "$DATABASE_USER" "$DATABASE_PASSWORD"
+            ;;
+
+            database-slave)
+                echo Setting up database slave
+
+                DATABASE_USER=$(jq -r '.user' <<< $SERVICE)
+                DATABASE_PASSWORD=$(jq -r '.password' <<< $SERVICE)
+                MASTER_DATABASE_ADDRESS=$(jq -r '.master_address' <<< $SERVICE)
+                MASTER_DATABASE_PORT=$(jq -r '.master_port' <<< $SERVICE)
+
+                az vm run-command invoke \
+                    --resource-group $RESOURCE_GROUP \
+                    --name $VM_NAME \
+                    --command-id RunShellScript \
+                    --scripts "@./mySql/sql-slave.sh" \
+                    --parameters "$SERVICE_PORT" "$DATABASE_USER" "$DATABASE_PASSWORD" "$MASTER_DATABASE_ADDRESS" "$MASTER_DATABASE_PORT"
             ;;
 
             *)
@@ -176,6 +221,8 @@ done
 
 # Delete
 az group delete --name $RESOURCE_GROUP -y
+
+# az group delete --name wusLabGroup -y
 
 az group delete --name NetworkWatcherRG -y
 
