@@ -149,7 +149,8 @@ for VM in "${VIRTUAL_MACHINES[@]}"; do
             frontend)
                 echo Setting up frontend
 
-                SERVER_IP=$(jq -r '.backend_ip' <<< $SERVICE)
+                SERVER_ADDRESS=$(jq -r '.backend_address' <<< $SERVICE)
+                SERVER_IP=$(az network public-ip show --resource-group "$RESOURCE_GROUP"  --name "$SERVER_ADDRESS"  --query "ipAddress" --output tsv)
                 SERVER_PORT=$(jq -r '.backend_port' <<< $SERVICE)
 
                 az vm run-command invoke \
@@ -163,12 +164,18 @@ for VM in "${VIRTUAL_MACHINES[@]}"; do
             nginx)
                 echo Setting up nginx
 
+                READ_SERVER_ADDRESS=$(jq -r '.read.server_address' <<< $SERVICE)
+                READ_SERVER_PORT=$(jq -r '.read.server_port' <<< $SERVICE)
+
+                WRITE_SERVER_ADDRESS=$(jq -r '.write.server_address' <<< $SERVICE)
+                WRITE_SERVER_PORT=$(jq -r '.write.server_port' <<< $SERVICE)
+
                 az vm run-command invoke \
                     --resource-group $RESOURCE_GROUP \
                     --name $VM_NAME \
                     --command-id RunShellScript \
-                    --scripts 'echo $1' \
-                    --parameters "$SERVICE_PORT"
+                    --scripts '@./nginx/nginx.sh' \
+                    --parameters "$SERVICE_PORT"  "$READ_SERVER_ADDRESS" "$READ_SERVER_PORT"  "$WRITE_SERVER_ADDRESS" "$WRITE_SERVER_PORT"
             ;;
 
             backend)
