@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euxo pipefail
+
 if [ "$#" -ne 7 ]; then
     echo "Usage: $0 SERVER_PORT DATABASE_MASTER_ADDRESS DATABASE_MASTER_PORT DATABASE_SLAVE_ADDRESS DATABASE_SLAVE_PORT DATABASE_USER DATABASE_PASSWORD" >&2
     exit 1
@@ -35,7 +37,7 @@ java -version
 # Download project
 git clone https://github.com/spring-petclinic/spring-petclinic-rest.git
 
-wget $SPRING_CONFIG -o $SERVER_CONFIG
+wget $SPRING_CONFIG -O $SERVER_CONFIG
 
 # Update configuration
 sed -i "s/SERVER_PORT/$SERVER_PORT/g" $SERVER_CONFIG
@@ -48,4 +50,7 @@ sed -i "s/DATABASE_PASSWORD/$DATABASE_PASSWORD/g" $SERVER_CONFIG
 
 # Test and run project
 cd ./spring-petclinic-rest/
+./mvnw test
 ./mvnw spring-boot:run &
+
+echo DONE
