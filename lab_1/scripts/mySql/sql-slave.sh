@@ -37,6 +37,7 @@ wget $POPULATE_DATABASE
 # Update configuration
 echo port = $DATABASE_PORT >> $MY_SQL_CONFIG
 echo server-id = 2 >> $MY_SQL_CONFIG
+echo read_only = 1 >> $MY_SQL_CONFIG
 
 sed -i "s/127.0.0.1/0.0.0.0/g" $MY_SQL_CONFIG
 sed -i "s/DATABASE_USER/$DATABASE_USER/g" ./user.sql
@@ -53,7 +54,11 @@ sudo service mysql restart
 
 # Change master
 
-sudo mysql -e "CHANGE MASTER TO MASTER_HOST='$MASTER_DATABASE_ADDRESS', MASTER_PORT=$MASTER_DATABASE_PORT, MASTER_USER='$DATABASE_USER', MASTER_PASSWORD='$DATABASE_PASSWORD';"
-sudo mysql -e "start slave;"
+STATEMENT="CHANGE MASTER TO MASTER_HOST='${MASTER_DATABASE_ADDRESS}', MASTER_PORT=${MASTER_DATABASE_PORT}, MASTER_USER='${DATABASE_USER}', MASTER_PASSWORD='${DATABASE_PASSWORD}';"
+echo $STATEMENT
+
+sudo mysql -v -e $STATEMENT
+sudo mysql -v -e "START SLAVE;"
+sudo mysql -v -e "SHOW SLAVE STATUS\G;"
 
 echo DONE

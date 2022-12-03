@@ -34,6 +34,8 @@ wget $POPULATE_DATABASE
 
 # Update configuration
 echo port = $DATABASE_PORT >> $MY_SQL_CONFIG
+echo server-id = 1 >> $MY_SQL_CONFIG
+echo log_bin = /var/log/mysql/mysql-bi.log >> $MY_SQL_CONFIG
 
 sed -i "s/127.0.0.1/0.0.0.0/g" $MY_SQL_CONFIG
 sed -i "s/DATABASE_USER/$DATABASE_USER/g" ./user.sql
@@ -48,5 +50,7 @@ cat ./populateDB.sql | sudo mysql -f
 
 # Restart service
 sudo service mysql restart
+
+sudo mysql -v -e "UNLOCK TABLES;"
 
 echo DONE
