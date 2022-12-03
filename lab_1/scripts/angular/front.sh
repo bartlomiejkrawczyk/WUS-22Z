@@ -1,4 +1,4 @@
-set -euxo pipefail
+#!/bin/bash
 
 if [ "$#" -ne 3 ]; then
     echo "Usage: $0 SERVER_IP SERVER_PORT FRONT_PORT" >&2
