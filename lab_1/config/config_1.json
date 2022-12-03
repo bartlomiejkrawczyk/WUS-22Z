@@ -9,11 +9,11 @@
             "rule": [
                 {
                     "name": "frontRule",
-                    "priority": 100,
+                    "priority": 1000,
                     "source_address_prefixes": "*",
                     "source_port_ranges": "*",
                     "destination_address_prefixes": "*",
-                    "destination_port_ranges": "*"
+                    "destination_port_ranges": "22,8080"
                 }
             ]
         },
@@ -22,8 +22,8 @@
             "rule": [
                 {
                     "name": "backendRule",
-                    "priority": 100,
-                    "source_address_prefixes": "10.0.0.0/16",
+                    "priority": 1000,
+                    "source_address_prefixes": "*",
                     "source_port_ranges": "*",
                     "destination_address_prefixes": "*",
                     "destination_port_ranges": 8080
@@ -35,7 +35,7 @@
             "rule": [
                 {
                     "name": "databaseRule",
-                    "priority": 100,
+                    "priority": 1000,
                     "source_address_prefixes": "10.0.0.0/16",
                     "source_port_ranges": "*",
                     "destination_address_prefixes": "*",
@@ -64,6 +64,9 @@
     "public_ip": [
         {
             "name": "front"
+        },
+        {
+            "name": "back"
         }
     ],
     "virtual_machine": [
@@ -85,7 +88,7 @@
             "name": "backendVM",
             "subnet": "backendSubnet",
             "private_ip_address": "10.0.2.10",
-            "public_ip_address": "",
+            "public_ip_address": "back",
             "deploy": [
                 {
                     "type": "backend",
@@ -105,8 +108,8 @@
             "deploy": [
                 {
                     "type": "frontend",
-                    "port": 80,
-                    "backend_ip": "10.0.2.10",
+                    "port": 8080,
+                    "backend_address": "back",
                     "backend_port": 8080
                 }
             ]
