@@ -48,3 +48,5 @@ npm run build -- --prod
 
 # Start server
 npx angular-http-server --path ./dist -p $FRONT_PORT &
+
+echo DONE

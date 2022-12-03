@@ -47,3 +47,5 @@ sed -i "s/DATABASE_PASSWORD/$DATABASE_PASSWORD/g" $SERVER_CONFIG
 cd ./spring-petclinic-rest/
 ./mvnw test
 ./mvnw spring-boot:run &
+
+echo DONE

@@ -34,3 +34,5 @@ sudo cp ./nginx.conf /etc/nginx/nginx.conf
 
 # Restart service
 sudo systemctl start nginx
+
+echo DONE

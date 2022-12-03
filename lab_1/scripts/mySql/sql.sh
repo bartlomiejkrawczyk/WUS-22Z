@@ -12,7 +12,7 @@ DATABASE_PORT=$1
 DATABASE_USER=$2
 DATABASE_PASSWORD=$3
 
-MY_SQL_CONFIG="https://raw.githubusercontent.com/bartlomiejkrawczyk/WUS-22Z/master/lab_1/scripts/mySql/.my.cnf"
+MY_SQL_CONFIG="/etc/mysql/mysql.conf.d/mysqld.cnf"
 USER_DATABASE="https://raw.githubusercontent.com/bartlomiejkrawczyk/WUS-22Z/master/lab_1/scripts/mySql/user.sql"
 INIT_DATABASE="https://raw.githubusercontent.com/spring-petclinic/spring-petclinic-rest/master/src/main/resources/db/mysql/initDB.sql"
 POPULATE_DATABASE="https://raw.githubusercontent.com/spring-petclinic/spring-petclinic-rest/master/src/main/resources/db/mysql/populateDB.sql"
@@ -22,21 +22,24 @@ cd ~/
 # Instalation
 sudo apt-get update
 sudo apt-get upgrade -y
+sudo apt-get autoremove -y
 
-sudo apt install mysql-server -y
-sudo apt install wget -y
+sudo apt-get install mysql-server -y
+sudo apt-get install wget -y
 
 # Download config files
-wget $MY_SQL_CONFIG
 wget $USER_DATABASE
 wget $INIT_DATABASE
 wget $POPULATE_DATABASE
 
 # Update configuration
-sed -i "s/DATABASE_PORT/$DATABASE_PORT/g" ./.my.cnf
+echo port = $DATABASE_PORT >> $MY_SQL_CONFIG
+
+sed -i "s/127.0.0.1/0.0.0.0/g" $MY_SQL_CONFIG
 sed -i "s/DATABASE_USER/$DATABASE_USER/g" ./user.sql
 sed -i "s/DATABASE_PASSWORD/$DATABASE_PASSWORD/g" ./user.sql
 sed -i "1s/^/USE petclinic;\n/" ./populateDB.sql
+
 
 # Run sql
 cat ./user.sql | sudo mysql -f
@@ -45,3 +48,5 @@ cat ./populateDB.sql | sudo mysql -f
 
 # Restart service
 sudo service mysql restart
+
+echo DONE
