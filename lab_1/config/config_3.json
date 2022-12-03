@@ -34,7 +34,7 @@
             "public_ip_address": "",
             "deploy": [
                 {
-                    "type": "database-master",
+                    "type": "database",
                     "port": 3306,
                     "user": "user",
                     "password": "password"
@@ -51,7 +51,9 @@
                     "type": "database-slave",
                     "port": 3306,
                     "user": "user",
-                    "password": "password"
+                    "password": "password",
+                    "master_address": "10.0.3.10",
+                    "master_post": 3306
                 }
             ]
         },
