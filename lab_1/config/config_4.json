@@ -1,0 +1,133 @@
+{
+    "resource_group": "wusLabGroup",
+    "network": {
+        "address_prefix": "10.0.0.0/16"
+    },
+    "network_security_group": [
+        {
+            "name": "NSG",
+            "rule": []
+        }
+    ],
+    "subnet": [
+        {
+            "name": "frontendSubnet",
+            "address_prefix": "10.0.1.0/24",
+            "network_security_group": ""
+        },
+        {
+            "name": "nginxSubnet",
+            "address_prefix": "10.0.2.0/24",
+            "network_security_group": ""
+        },
+        {
+            "name": "backendSubnet",
+            "address_prefix": "10.0.3.0/24",
+            "network_security_group": ""
+        },
+        {
+            "name": "databaseSubnet",
+            "address_prefix": "10.0.4.0/24",
+            "network_security_group": ""
+        }
+    ],
+    "public_ip": [
+        {
+            "name": "front"
+        }
+    ],
+    "virtual_machine": [
+        {
+            "name": "databaseMasterVM",
+            "subnet": "databaseSubnet",
+            "private_ip_address": "10.0.4.10",
+            "public_ip_address": "",
+            "deploy": [
+                {
+                    "type": "database",
+                    "port": 3306,
+                    "user": "user",
+                    "password": "password"
+                }
+            ]
+        },
+        {
+            "name": "databaseSlaveVM",
+            "subnet": "databaseSubnet",
+            "private_ip_address": "10.0.4.11",
+            "public_ip_address": "",
+            "deploy": [
+                {
+                    "type": "database-slave",
+                    "port": 3306,
+                    "user": "user",
+                    "password": "password",
+                    "master_address": "10.0.4.10",
+                    "master_post": 3306
+                }
+            ]
+        },
+        {
+            "name": "backendVM",
+            "subnet": "backendSubnet",
+            "private_ip_address": "10.0.3.10",
+            "public_ip_address": "",
+            "deploy": [
+                {
+                    "type": "backend",
+                    "port": 8080,
+                    "database_ip": "10.0.4.10",
+                    "database_port": 3306,
+                    "database_user": "user",
+                    "database_password": "password"
+                },
+                {
+                    "type": "backend",
+                    "port": 8081,
+                    "database_ip": "10.0.4.11",
+                    "database_port": 3306,
+                    "database_user": "user",
+                    "database_password": "password"
+                }
+            ]
+        },
+        {
+            "name": "nginxVM",
+            "subnet": "nginxSubnet",
+            "private_ip_address": "10.0.2.10",
+            "public_ip_address": "",
+            "deploy": [
+                {
+                    "type": "nginx",
+                    "port": 80,
+                    "get": [
+                        {
+                            "server_address": "10.0.3.10",
+                            "server_port": 8081
+                        }
+                    ],
+                    "post": [
+                        {
+                            "server_address": "10.0.3.10",
+                            "server_port": 8080
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "frontendVM",
+            "subnet": "frontendSubnet",
+            "private_ip_address": "10.0.1.10",
+            "public_ip_address": "front",
+            "deploy": [
+                {
+                    "type": "frontend",
+                    "port": 80,
+                    "backend_ip": "10.0.2.10",
+                    "backend_port": 80
+                }
+            ]
+        }
+    ]
+}

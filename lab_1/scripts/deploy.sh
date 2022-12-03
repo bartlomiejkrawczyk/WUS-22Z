@@ -124,6 +124,17 @@ for VM in "${VIRTUAL_MACHINES[@]}"; do
                     --parameters hello frontend
             ;;
 
+            nginx)
+                echo Setting up nginx
+
+                az vm run-command invoke \
+                    --resource-group $RESOURCE_GROUP \
+                    --name $VM_NAME \
+                    --command-id RunShellScript \
+                    --scripts 'echo $1' \
+                    --parameters "$SERVICE_PORT"
+            ;;
+
             backend)
                 echo Setting up backend
 
@@ -200,6 +211,8 @@ done
 
 # Delete
 az group delete --name $RESOURCE_GROUP -y
+
+# az group delete --name wusLabGroup -y
 
 az group delete --name NetworkWatcherRG -y
 
