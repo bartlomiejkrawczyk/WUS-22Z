@@ -1,4 +1,5 @@
 #!/bin/bash
+
 set -euxo pipefail
 
 if [ "$#" -ne 5 ]; then
