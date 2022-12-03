@@ -40,9 +40,42 @@ az network vnet create \
 
 # Network Security Group
 
-# TODO: IMPLEMENT ME!
-# Create security group
-# add security rules
+readarray -t NETWORK_SECURITY_GROUPS < <(jq -c '.network_security_group[]' "$CONFIG_FILE")
+
+for GROUP in "${NETWORK_SECURITY_GROUPS[@]}"; do
+    echo $GROUP
+
+    GROUP_NAME=$(jq -r '.name' <<< $GROUP)
+
+    az network nsg create \
+        --resource-group $RESOURCE_GROUP \
+        --name $GROUP_NAME
+
+    readarray -t RULES < <(jq -c '.rule[]' <<< $GROUP)
+
+    for RULE in "${RULES[@]}"; do
+        echo $RULE
+
+        RULE_NAME=$(jq -r '.name' <<< $RULE)
+        RULE_PRIORITY=$(jq -r '.priority' <<< $RULE)
+        RULE_SOURCE_ADDRESS_PREFIX=$(jq -r '.source_address_prefixes' <<< $RULE)
+        RULE_SOURCE_PORT_RANGES=$(jq -r '.source_port_ranges' <<< $RULE)
+        RULE_DESTINATION_ADDRESS_PREFIX=$(jq -r '.destination_address_prefixes' <<< $RULE)
+        RULE_DESTINATION_PORT_RANGES=$(jq -r '.destination_port_ranges' <<< $RULE)
+
+        az network nsg rule create \
+            --resource-group $RESOURCE_GROUP \
+            --nsg-name $GROUP_NAME \
+            --name $RULE_NAME \
+            --access allow \
+            --protocol Tcp \
+            --priority $RULE_PRIORITY \
+            --source-address-prefix "$RULE_SOURCE_ADDRESS_PREFIX" \
+            --source-port-range "$RULE_SOURCE_PORT_RANGES" \
+            --destination-address-prefix "$RULE_DESTINATION_ADDRESS_PREFIX" \
+            --destination-port-range "$RULE_DESTINATION_PORT_RANGES"
+    done
+done
 
 # Subnet
 
@@ -219,7 +252,7 @@ for PUBLIC_IP in "${PUBLIC_IPS[@]}"; do
       --resource-group "$RESOURCE_GROUP" \
       --name "$PUBLIC_IP_NAME" \
       --query "ipAddress" \
-      --output tsv | echo
+      --output tsv
 done
 
 # Delete
