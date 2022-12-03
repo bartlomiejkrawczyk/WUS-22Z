@@ -148,18 +148,14 @@
                 {
                     "type": "nginx",
                     "port": 80,
-                    "get": [
-                        {
-                            "server_address": "10.0.3.10",
-                            "server_port": 8081
-                        }
-                    ],
-                    "post": [
-                        {
-                            "server_address": "10.0.3.10",
-                            "server_port": 8080
-                        }
-                    ]
+                    "read": {
+                        "server_address": "10.0.3.10",
+                        "server_port": 8081
+                    },
+                    "write": {
+                        "server_address": "10.0.3.10",
+                        "server_port": 8080
+                    }
                 }
             ]
         },
