@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euxo pipefail
 
 if [ "$#" -ne 5 ]; then
     echo "Usage: $0 SERVER_PORT DATABASE_ADDRESS DATABASE_PORT DATABASE_USER DATABASE_PASSWORD" >&2

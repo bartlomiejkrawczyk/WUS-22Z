@@ -158,11 +158,21 @@ for VM in "${VIRTUAL_MACHINES[@]}"; do
                 echo 1>&2 "Unknown service type!"
                 exit 1
             ;;
-
         esac
     done
 done
 
+for PUBLIC_IP in "${PUBLIC_IPS[@]}"; do
+    echo $PUBLIC_IP
+
+    PUBLIC_IP_NAME=$(jq -r '.name' <<< $PUBLIC_IP)
+
+    az network public-ip show \
+      --resource-group "$RESOURCE_GROUP" \
+      --name "$PUBLIC_IP_NAME" \
+      --query "ipAddress" \
+      --output tsv
+done
 
 # Delete
 az group delete --name $RESOURCE_GROUP -y
