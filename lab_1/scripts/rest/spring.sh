@@ -34,7 +34,7 @@ java -version
 # Download project
 git clone https://github.com/spring-petclinic/spring-petclinic-rest.git
 
-wget $SPRING_CONFIG -o $SERVER_CONFIG
+wget $SPRING_CONFIG -O $SERVER_CONFIG
 
 # Update configuration
 sed -i "s/SERVER_PORT/$SERVER_PORT/g" $SERVER_CONFIG
