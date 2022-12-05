@@ -39,7 +39,7 @@
                     "source_address_prefixes": "10.0.0.0/16",
                     "source_port_ranges": "*",
                     "destination_address_prefixes": "*",
-                    "destination_port_ranges": "22-3306"
+                    "destination_port_ranges": "3306"
                 }
             ]
         }
