@@ -33,14 +33,16 @@ wget $INIT_DATABASE
 wget $POPULATE_DATABASE
 
 # Update configuration
-echo port = $DATABASE_PORT >> $MY_SQL_CONFIG
-echo server-id = 1 >> $MY_SQL_CONFIG
-echo log_bin = /var/log/mysql/mysql-bi.log >> $MY_SQL_CONFIG
+echo "port = $DATABASE_PORT" >> $MY_SQL_CONFIG
+echo "server-id = 1" >> $MY_SQL_CONFIG
+echo "log_bin = /var/log/mysql/mysql-bi.log" >> $MY_SQL_CONFIG
 
 sed -i "s/127.0.0.1/0.0.0.0/g" $MY_SQL_CONFIG
 sed -i "s/DATABASE_USER/$DATABASE_USER/g" ./user.sql
 sed -i "s/DATABASE_PASSWORD/$DATABASE_PASSWORD/g" ./user.sql
 sed -i "1s/^/USE petclinic;\n/" ./populateDB.sql
+
+cat $MY_SQL_CONFIG
 
 
 # Run sql
