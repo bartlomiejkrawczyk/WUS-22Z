@@ -39,7 +39,7 @@
                     "source_address_prefixes": "10.0.0.0/16",
                     "source_port_ranges": "*",
                     "destination_address_prefixes": "*",
-                    "destination_port_ranges": 3306
+                    "destination_port_ranges": "22-3306"
                 }
             ]
         }
@@ -67,6 +67,9 @@
         },
         {
             "name": "back"
+        },
+        {
+            "name": "dbslave"
         }
     ],
     "virtual_machine": [
@@ -88,7 +91,7 @@
             "name": "databaseSlaveVM",
             "subnet": "databaseSubnet",
             "private_ip_address": "10.0.3.11",
-            "public_ip_address": "",
+            "public_ip_address": "dbslave",
             "deploy": [
                 {
                     "type": "database-slave",
@@ -96,7 +99,7 @@
                     "user": "user",
                     "password": "password",
                     "master_address": "10.0.3.10",
-                    "master_post": 3306
+                    "master_port": 3306
                 }
             ]
         },

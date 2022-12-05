@@ -111,7 +111,7 @@
                     "user": "user",
                     "password": "password",
                     "master_address": "10.0.4.10",
-                    "master_post": 3306
+                    "master_port": 3306
                 }
             ]
         },
