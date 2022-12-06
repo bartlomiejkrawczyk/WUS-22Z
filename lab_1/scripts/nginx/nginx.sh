@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "$#" -ne 3 ]; then
+if [ "$#" -ne 5 ]; then
     echo "Usage: $0 NGINX_PORT READ_SERVER_ADDRESS READ_SERVER_PORT WRITE_SERVER_ADDRESS WRITE_SERVER_PORT" >&2
     exit 1
 fi
@@ -8,8 +8,8 @@ fi
 NGINX_PORT=$1
 READ_SERVER_ADDRESS=$2
 READ_SERVER_PORT=$3
-WRITE_SERVER_ADDRESS=$3
-WRITE_SERVER_PORT=$3
+WRITE_SERVER_ADDRESS=$4
+WRITE_SERVER_PORT=$5
 
 NGINX_CONFIG="https://raw.githubusercontent.com/bartlomiejkrawczyk/WUS-22Z/master/lab_1/scripts/nginx/nginx.conf"
 
@@ -33,9 +33,9 @@ sed -i "s/WRITE_SERVER_PORT/$WRITE_SERVER_PORT/g" ./nginx.conf
 # TODO: Remove me
 cat /etc/nginx/nginx.conf
 
-sudo cp ./nginx.conf /etc/nginx/nginx.conf
+sudo cp ./nginx.conf /etc/nginx/conf.d/lb.conf
 
 # Restart service
-sudo systemctl start nginx
+sudo systemctl restart nginx.service
 
 echo DONE
