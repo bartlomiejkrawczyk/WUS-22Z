@@ -11,22 +11,9 @@
                     "name": "frontRule",
                     "priority": 1000,
                     "source_address_prefixes": "*",
-                    "source_port_ranges": "8080",
-                    "destination_address_prefixes": "*",
-                    "destination_port_ranges": 8080
-                }
-            ]
-        },
-        {
-            "name": "nginxNSG",
-            "rule": [
-                {
-                    "name": "nginxRule",
-                    "priority": 1000,
-                    "source_address_prefixes": "*",
                     "source_port_ranges": "*",
                     "destination_address_prefixes": "*",
-                    "destination_port_ranges": 80
+                    "destination_port_ranges": "22-8081"
                 }
             ]
         },
@@ -64,11 +51,6 @@
             "network_security_group": "frontendNSG"
         },
         {
-            "name": "nginxSubnet",
-            "address_prefix": "10.0.2.0/24",
-            "network_security_group": "nginxNSG"
-        },
-        {
             "name": "backendSubnet",
             "address_prefix": "10.0.3.0/24",
             "network_security_group": "backendNSG"
@@ -82,9 +64,6 @@
     "public_ip": [
         {
             "name": "front"
-        },
-        {
-            "name": "nginx"
         }
     ],
     "virtual_machine": [
@@ -143,14 +122,14 @@
             ]
         },
         {
-            "name": "nginxVM",
-            "subnet": "nginxSubnet",
-            "private_ip_address": "10.0.2.10",
-            "public_ip_address": "nginx",
+            "name": "frontendVM",
+            "subnet": "frontendSubnet",
+            "private_ip_address": "10.0.1.10",
+            "public_ip_address": "front",
             "deploy": [
                 {
                     "type": "nginx",
-                    "port": 8080,
+                    "port": 8081,
                     "read": {
                         "server_address": "10.0.3.10",
                         "server_port": 8081
@@ -159,20 +138,12 @@
                         "server_address": "10.0.3.10",
                         "server_port": 8080
                     }
-                }
-            ]
-        },
-        {
-            "name": "frontendVM",
-            "subnet": "frontendSubnet",
-            "private_ip_address": "10.0.1.10",
-            "public_ip_address": "front",
-            "deploy": [
+                },
                 {
                     "type": "frontend",
                     "port": 8080,
-                    "backend_ip": "10.0.2.10",
-                    "backend_port": 8080
+                    "backend_address": "front",
+                    "backend_port": 8081
                 }
             ]
         }
