@@ -262,13 +262,6 @@ for PUBLIC_IP in "${PUBLIC_IPS[@]}"; do
       --output tsv
 done
 
-# Delete
-# az group delete --name $RESOURCE_GROUP -y
-
-# az group delete --name wusLabGroup -y
-
-# az group delete --name NetworkWatcherRG -y
-
 # Logout
 az logout
 
