@@ -1,6 +1,6 @@
 # WUS22Z - Laboratorium 1
 
-**Barłomiej Krawczyk**
+**Bartłomiej Krawczyk**
 
 **Karol Kasperek**
 
