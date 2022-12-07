@@ -1,6 +1,6 @@
 # WUS22Z - Laboratorium 1
 
-**Barłomiej Krawczyk**
+**Bartłomiej Krawczyk**
 
 **Karol Kasperek**
 
@@ -13,15 +13,15 @@ Sposób wykonania poszczególnych konfiguracji:
 
 ## Konfiguracja 1:
 
-Będać w folderze lab1:
-` ./scripts/deploy.sh ./config/config_1.json`
+Będać w folderze lab1/scripts:
+` ./deploy.sh ../config/config_1.json`
 
 ## Konfiguracja 3:
 
-Będać w folderze lab1:
-`./scripts/deploy.sh ./config/config_3.json`
+Będać w folderze lab1/scripts:
+` ./deploy.sh ../config/config_3.json`
 
 ## Konfiguracja 4:
 
-Będać w folderze lab1:
-`./scripts/deploy.sh ./config/config_4.json`
+Będać w folderze lab1/scripts:
+` ./deploy.sh ../config/config_4.json`
