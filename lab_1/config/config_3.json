@@ -67,9 +67,6 @@
         },
         {
             "name": "back"
-        },
-        {
-            "name": "dbslave"
         }
     ],
     "virtual_machine": [
@@ -91,7 +88,7 @@
             "name": "databaseSlaveVM",
             "subnet": "databaseSubnet",
             "private_ip_address": "10.0.3.11",
-            "public_ip_address": "dbslave",
+            "public_ip_address": "",
             "deploy": [
                 {
                     "type": "database-slave",

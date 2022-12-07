@@ -30,9 +30,6 @@ sed -i "s/READ_SERVER_PORT/$READ_SERVER_PORT/g" ./nginx.conf
 sed -i "s/WRITE_SERVER_ADDRESS/$WRITE_SERVER_ADDRESS/g" ./nginx.conf
 sed -i "s/WRITE_SERVER_PORT/$WRITE_SERVER_PORT/g" ./nginx.conf
 
-# TODO: Remove me
-cat /etc/nginx/nginx.conf
-
 sudo cp ./nginx.conf /etc/nginx/conf.d/lb.conf
 
 # Restart service
