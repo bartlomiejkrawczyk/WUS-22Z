@@ -1,0 +1,136 @@
+{
+    "resource_group": "wusLabGroup",
+    "network": {
+        "address_prefix": "10.0.0.0/16"
+    },
+    "network_security_group": [
+        {
+            "name": "frontendNSG",
+            "rule": [
+                {
+                    "name": "frontRule",
+                    "priority": 1000,
+                    "source_address_prefixes": "*",
+                    "source_port_ranges": "*",
+                    "destination_address_prefixes": "*",
+                    "destination_port_ranges": 8080
+                }
+            ]
+        },
+        {
+            "name": "backendNSG",
+            "rule": [
+                {
+                    "name": "backendRule",
+                    "priority": 1000,
+                    "source_address_prefixes": "*",
+                    "source_port_ranges": "*",
+                    "destination_address_prefixes": "*",
+                    "destination_port_ranges": 8080
+                }
+            ]
+        },
+        {
+            "name": "databaseNSG",
+            "rule": [
+                {
+                    "name": "databaseRule",
+                    "priority": 1000,
+                    "source_address_prefixes": "10.0.0.0/16",
+                    "source_port_ranges": "*",
+                    "destination_address_prefixes": "*",
+                    "destination_port_ranges": "3306"
+                }
+            ]
+        }
+    ],
+    "subnet": [
+        {
+            "name": "frontendSubnet",
+            "address_prefix": "10.0.1.0/24",
+            "network_security_group": "frontendNSG"
+        },
+        {
+            "name": "backendSubnet",
+            "address_prefix": "10.0.2.0/24",
+            "network_security_group": "backendNSG"
+        },
+        {
+            "name": "databaseSubnet",
+            "address_prefix": "10.0.3.0/24",
+            "network_security_group": "databaseNSG"
+        }
+    ],
+    "public_ip": [
+        {
+            "name": "front"
+        },
+        {
+            "name": "back"
+        }
+    ],
+    "virtual_machine": [
+        {
+            "name": "databaseMasterVM",
+            "subnet": "databaseSubnet",
+            "private_ip_address": "10.0.3.10",
+            "public_ip_address": "",
+            "deploy": [
+                {
+                    "type": "database",
+                    "port": 3306,
+                    "user": "user",
+                    "password": "password"
+                }
+            ]
+        },
+        {
+            "name": "databaseSlaveVM",
+            "subnet": "databaseSubnet",
+            "private_ip_address": "10.0.3.11",
+            "public_ip_address": "",
+            "deploy": [
+                {
+                    "type": "database-slave",
+                    "port": 3306,
+                    "user": "user",
+                    "password": "password",
+                    "master_address": "10.0.3.10",
+                    "master_port": 3306
+                }
+            ]
+        },
+        {
+            "name": "backendReplicasetVM",
+            "subnet": "backendSubnet",
+            "private_ip_address": "10.0.2.10",
+            "public_ip_address": "back",
+            "deploy": [
+                {
+                    "type": "backend-replicaset",
+                    "port": 8080,
+                    "database_master_ip": "10.0.3.10",
+                    "database_master_port": 3306,
+                    "database_slave_ip": "10.0.3.11",
+                    "database_slave_port": 3306,
+                    "database_user": "user",
+                    "database_password": "password"
+                }
+            ]
+        },
+        {
+            "name": "frontendVM",
+            "subnet": "frontendSubnet",
+            "private_ip_address": "10.0.1.10",
+            "public_ip_address": "front",
+            "deploy": [
+                {
+                    "type": "frontend",
+                    "port": 8080,
+                    "backend_address": "back",
+                    "backend_port": 8080
+                }
+            ]
+        }
+    ]
+}
