@@ -1,0 +1,84 @@
+---
+# TODO: Load all machines from azure
+- hosts: localhost
+  become: true
+  tasks:
+  - name: update repository index
+    apt:
+      update_cache: yes
+  
+  - name: Echo virtual machines
+    ansible.builtin.shell:
+      cmd: echo {{ item.name }}
+    loop: "{{ virtual_machine }}"
+  
+  - name: Echo deployments per virtual machines
+    ansible.builtin.shell:
+      cmd: echo {{ item.0.name }} {{ item.1.type }}
+    with_subelements:
+      - "{{ virtual_machine }}"
+      - deploy
+  
+  - name: Upgrade packages
+    apt:
+      upgrade: dist
+
+- hosts: localhost # all TODO
+  become: true
+  tasks:
+
+  - name: Update repository index
+    apt:
+      update_cache: yes
+  
+  - name: Upgrade packages
+    apt:
+      upgrade: dist
+
+  # === Frontend ===
+  - name: Install curl
+    apt:
+      name: curl
+      state: latest
+    with_subelements:
+      - "{{ virtual_machine }}"
+      - deploy
+    when: inventory_hostname == item.0.name and item.1.type == "frontend"
+  
+  - name: Install npm
+    apt:
+      name: npm
+      state: latest
+    with_subelements:
+      - "{{ virtual_machine }}"
+      - deploy
+    when: inventory_hostname == item.0.name and item.1.type == "frontend"
+
+  - name: Deploy frontend
+    ansible.builtin.script:
+      cmd: scripts/front.sh {{ item.1.backend_address }} {{ item.1.backend_port }} {{ item.1.port }}
+    with_subelements:
+      - "{{ virtual_machine }}"
+      - deploy
+    when: inventory_hostname == item.0.name and item.1.type == "frontend"
+  # === Frontend ===
+  # === Backend ===
+  - name: Install java
+    apt:
+      name: openjdk-8-jdk
+      state: latest
+    with_subelements:
+      - "{{ virtual_machine }}"
+      - deploy
+    when: inventory_hostname == item.0.name and item.1.type == "frontend"
+  # === Backend ===
+  # === Backend Replicaset ===
+
+  # === Backend Replicaset ===
+  # === Database Master ===
+
+  # === Database Master ===
+  # === Database Slave ===
+
+  # === Database Slave ===
+
