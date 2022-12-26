@@ -1,84 +1,75 @@
 ---
 # TODO: Load all machines from azure
-- hosts: localhost
+# - hosts: localhost
+#   tasks:
+#     - name: Echo virtual machines
+#       ansible.builtin.shell:
+#         cmd: echo {{ item.name }}
+#       loop: "{{ virtual_machine }}"
+    
+#     - name: Echo deployments per virtual machines
+#       ansible.builtin.shell:
+#         cmd: echo {{ item.0.name }} {{ item.1.type }}
+#       with_subelements:
+#         - "{{ virtual_machine }}"
+#         - deploy
+
+- hosts: 
+  - all
+  - localhost
   become: true
-  tasks:
-  - name: update repository index
-    apt:
-      update_cache: yes
-  
-  - name: Echo virtual machines
-    ansible.builtin.shell:
-      cmd: echo {{ item.name }}
-    loop: "{{ virtual_machine }}"
-  
-  - name: Echo deployments per virtual machines
-    ansible.builtin.shell:
-      cmd: echo {{ item.0.name }} {{ item.1.type }}
-    with_subelements:
-      - "{{ virtual_machine }}"
-      - deploy
-  
-  - name: Upgrade packages
-    apt:
-      upgrade: dist
+  pre_tasks:
+    - name: Echo virtual machines
+      ansible.builtin.shell:
+        cmd: echo {{ backend_port }} {{ abc }}
+    - name: Update repository index
+      apt:
+        update_cache: yes
+    
+    - name: Upgrade packages
+      apt:
+        upgrade: dist
 
-- hosts: localhost # all TODO
+- hosts: 
+  - frontend
   become: true
-  tasks:
+  roles:
+    - frontend
 
-  - name: Update repository index
-    apt:
-      update_cache: yes
-  
-  - name: Upgrade packages
-    apt:
-      upgrade: dist
+- hosts: 
+  - backend
+  - backend_replicaset
+  become: true
+  roles:
+    - backend_base
 
-  # === Frontend ===
-  - name: Install curl
-    apt:
-      name: curl
-      state: latest
-    with_subelements:
-      - "{{ virtual_machine }}"
-      - deploy
-    when: inventory_hostname == item.0.name and item.1.type == "frontend"
-  
-  - name: Install npm
-    apt:
-      name: npm
-      state: latest
-    with_subelements:
-      - "{{ virtual_machine }}"
-      - deploy
-    when: inventory_hostname == item.0.name and item.1.type == "frontend"
+- hosts: 
+  - backend
+  become: true
+  roles:
+    - backend
 
-  - name: Deploy frontend
-    ansible.builtin.script:
-      cmd: scripts/front.sh {{ item.1.backend_address }} {{ item.1.backend_port }} {{ item.1.port }}
-    with_subelements:
-      - "{{ virtual_machine }}"
-      - deploy
-    when: inventory_hostname == item.0.name and item.1.type == "frontend"
-  # === Frontend ===
-  # === Backend ===
-  - name: Install java
-    apt:
-      name: openjdk-8-jdk
-      state: latest
-    with_subelements:
-      - "{{ virtual_machine }}"
-      - deploy
-    when: inventory_hostname == item.0.name and item.1.type == "frontend"
-  # === Backend ===
-  # === Backend Replicaset ===
+- hosts: 
+  - backend_replicaset
+  become: true
+  roles:
+    - backend_replicaset
 
-  # === Backend Replicaset ===
-  # === Database Master ===
+- hosts: 
+  - db_master
+  - db_slave
+  become: true
+  roles:
+    - db_base
 
-  # === Database Master ===
-  # === Database Slave ===
+- hosts:
+  - db_master
+  become: true
+  roles:
+    - db_master
 
-  # === Database Slave ===
-
+- hosts:
+  - db_slave
+  become: true
+  roles:
+    - db_slave

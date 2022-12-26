@@ -1,0 +1,17 @@
+- name: Install curl
+  apt:
+    name: curl
+    state: latest
+
+- name: Install npm
+  apt:
+    name: npm
+    state: latest
+
+- name: Deploy frontend
+  ansible.builtin.script:
+    cmd: front.sh {{ item.1.backend_address }} {{ item.1.backend_port }} {{ item.1.port }}
+  with_subelements:
+    - "{{ virtual_machine }}"
+    - deploy
+  when: inventory_hostname == "localhost" and item.1.type == "frontend"
