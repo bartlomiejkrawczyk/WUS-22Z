@@ -1,5 +1,5 @@
 ---
-# TODO: Load all machines from azure
+# TODO: Load all machines from azure, or not :)
 # - hosts: localhost
 #   tasks:
 #     - name: Echo virtual machines
@@ -33,10 +33,23 @@
         upgrade: dist
 
 - hosts: 
-  - frontend
+  - db_master
+  - db_slave
   become: true
   roles:
-    - frontend
+    - db_base
+
+- hosts:
+  - db_master
+  become: true
+  roles:
+    - db_master
+
+- hosts:
+  - db_slave
+  become: true
+  roles:
+    - db_slave
 
 - hosts: 
   - backend
@@ -56,22 +69,15 @@
   become: true
   roles:
     - backend_replicaset
+  
+- hosts: 
+  - nginx
+  become: true
+  roles:
+    - nginx
 
 - hosts: 
-  - db_master
-  - db_slave
+  - frontend
   become: true
   roles:
-    - db_base
-
-- hosts:
-  - db_master
-  become: true
-  roles:
-    - db_master
-
-- hosts:
-  - db_slave
-  become: true
-  roles:
-    - db_slave
+    - frontend
