@@ -1,0 +1,46 @@
+all:
+  hosts:
+    localhost:
+      ansible_connection: local
+      vm_name: local_vm
+      abc: xD
+  children:
+    frontend:
+      hosts:
+        localhost:
+          frontend_port: 8080
+          backend_address: localhost
+          backend_port: 8080
+    backend:
+      hosts:
+        localhost:
+          parameters:
+            - backend_port: 8081
+              database_address: localhost
+              database_port: 3036
+              database_user: admin
+              database_password: password
+            - backend_port: 8080
+              database_address: localhost
+              database_port: 3036
+              database_user: admin
+              database_password: password
+    backend_replicaset:
+      hosts:
+        localhost:
+            - backend_port: 8081
+              database_master_address: localhost
+              database_master_port: 3036
+              database_slave_address: localhost
+              database_slave_port: 3036
+              database_user: admin
+              database_password: password
+    nginx:
+      hosts:
+        localhost:
+    db_master:
+      hosts:
+        localhost:
+    db_slave:
+      hosts:
+        localhost:
