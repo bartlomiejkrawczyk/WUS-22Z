@@ -21,7 +21,9 @@
   pre_tasks:
     - name: Echo virtual machines
       ansible.builtin.shell:
-        cmd: echo {{ backend_port }} {{ abc }}
+        cmd: echo {{ item.backend_port }} {{ abc }}
+      loop: "{{ parameters }}"
+
     - name: Update repository index
       apt:
         update_cache: yes
