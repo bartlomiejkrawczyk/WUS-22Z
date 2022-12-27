@@ -40,6 +40,11 @@ all:
     nginx:
       hosts:
         localhost:
+          nginx_port: 8082
+          read_backend_address: localhost
+          read_backend_port: 8080
+          write_backend_address: localhost
+          write_backend_port: 8080
     db_master:
       hosts:
         localhost:

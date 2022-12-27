@@ -1,0 +1,24 @@
+- name: Install nginx
+  apt:
+    name: nginx
+    state: latest
+
+- name: Install wget
+  apt:
+    name: wget
+    state: latest
+
+- name: Copy nginx configuration
+  ansible.builtin.copy:
+    src: nginx.conf
+    dest: /etc/nginx/conf.d/lb.conf
+
+- name: Replace values in configuration
+  ansible.builtin.script:
+    cmd: nginx.sh {{ nginx_port }} {{ read_backend_address }} {{ read_backend_port }} {{ write_backend_address }} {{ write_backend_port }}
+
+- name: Restart service nginx
+  ansible.builtin.systemd:
+    name: nginx.service
+    state: restarted
+    daemon_reload: yes
