@@ -11,7 +11,7 @@
 
 - name: Replace values in configuration
   ansible.builtin.script:
-    cmd: back-replicaset.sh {{ backend_port }} {{ database_master_address }} {{ database_master_port }} {{ database_slave_address }} {{ database_slave_port }} {{ database_user }} {{ database_password }}
+    cmd: back-replicaset.sh {{ replicaset_port }} {{ database_master_address }} {{ database_master_port }} {{ database_slave_address }} {{ database_slave_port }} {{ database_user }} {{ database_password }}
     chdir: /root/spring-petclinic-rest/src/main/resources/
 
 - name: Test spring application
