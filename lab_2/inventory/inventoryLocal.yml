@@ -20,11 +20,13 @@ all:
               database_port: 3036
               database_user: admin
               database_password: password
+              directory: first
             - backend_port: 8080
               database_address: localhost
               database_port: 3036
               database_user: admin
               database_password: password
+              directory: second
     backend_replicaset:
       hosts:
         localhost:
