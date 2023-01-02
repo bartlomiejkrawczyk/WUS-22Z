@@ -63,13 +63,13 @@
     ],
     "public_ip": [
         {
-            "name": "front"
+            "name": "database"
         },
         {
             "name": "back"
         },
         {
-            "name": "database"
+            "name": "front"
         }
     ],
     "virtual_machine": [
