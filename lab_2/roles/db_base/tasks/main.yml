@@ -1,0 +1,17 @@
+- name: Install docker
+  apt:
+    name: docker
+    state: latest
+- name: Install docker.io
+  apt:
+    name: docker.io
+    state: latest
+- name: Addgroup docker
+  ansible.builtin.group:
+    name: docker
+    state: present
+- name: Add {{ database_user }} to docker group
+  command: usermod -aG docker {{ database_user }}
+- name: reset ssh connection
+  meta: reset_connection
+  become: no

@@ -1,0 +1,12 @@
+- name: Ensures db_master dir exists
+  file: path=/db_master/ state=directory
+- name: Copy master DB Dockerfile
+  ansible.builtin.copy:
+    src: ./db/
+    dest: /db_master/
+- name: Stop existing master DB container
+  shell: docker stop wus-db-master || true
+- name: Build master DB image
+  command: docker build -t wus-db-master /db_master
+- name: Run master DB image
+  command: docker run --rm -d -p {{ database_port }}:3306 --name wus-db-master wus-db-master
