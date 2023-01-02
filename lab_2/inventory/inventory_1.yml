@@ -1,34 +1,40 @@
 all:
   hosts:
-    104.40.186.196:
+    hostFront:
       vm_name: front
-      ansible_user: 01158596
-    104.40.187.228:
+      ansible_user: bartlomiejkrawczyk
+      ansible_ssh_private_key_file: /home/bartlomiejkrawczyk/.ssh/1672689165_6310818.pub
+      ansible_host: 13.80.99.85
+    hostBack:
       vm_name: back
-      ansible_user: 01158596
-    104.40.185.204:
+      ansible_user: bartlomiejkrawczyk
+      ansible_ssh_private_key_file: /home/bartlomiejkrawczyk/.ssh/1672689165_6310818.pub
+      ansible_host: 13.93.7.29
+    hostDb:
       vm_name: database
-      ansible_user: 01158596
+      ansible_user: bartlomiejkrawczyk
+      ansible_ssh_private_key_file: /home/bartlomiejkrawczyk/.ssh/1672689165_6310818.pub
+      ansible_host: 40.114.226.129
   children:
     frontend:
       hosts:
-        104.40.186.196:
+        hostFront:
           frontend_port: 8080
-          backend_address: 104.40.187.228
+          backend_address: hostBack
           backend_port: 8080
     backend:
       hosts:
-        104.40.187.228:
+        hostBack:
           parameters:
             - backend_port: 8080
-              database_address: 104.40.185.204
+              database_address: hostDb
               database_port: 3036
               database_user: admin
               database_password: password
               directory: first
     db_master:
       hosts:
-        104.40.185.204:
+        hostDb:
           database_port: 3036
           database_user: admin
           database_password: password
