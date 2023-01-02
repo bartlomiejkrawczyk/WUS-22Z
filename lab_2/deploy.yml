@@ -1,29 +1,10 @@
 ---
-# TODO: Load all machines from azure, or not :)
-# - hosts: localhost
-#   tasks:
-#     - name: Echo virtual machines
-#       ansible.builtin.shell:
-#         cmd: echo {{ item.name }}
-#       loop: "{{ virtual_machine }}"
-    
-#     - name: Echo deployments per virtual machines
-#       ansible.builtin.shell:
-#         cmd: echo {{ item.0.name }} {{ item.1.type }}
-#       with_subelements:
-#         - "{{ virtual_machine }}"
-#         - deploy
 
 - hosts: 
   - all
   - localhost
   become: true
   pre_tasks:
-    - name: Echo virtual machines
-      ansible.builtin.shell:
-        cmd: echo {{ item.backend_port }} {{ abc }}
-      loop: "{{ parameters }}"
-
     - name: Update repository index
       apt:
         update_cache: yes
@@ -32,7 +13,7 @@
       apt:
         upgrade: dist
 
-- hosts: 
+- hosts:
   - db_master
   - db_slave
   become: true
@@ -58,19 +39,19 @@
   roles:
     - backend_base
 
-- hosts: 
+- hosts:
   - backend
   become: true
   roles:
     - backend
 
-- hosts: 
+- hosts:
   - backend_replicaset
   become: true
   roles:
     - backend_replicaset
   
-- hosts: 
+- hosts:
   - nginx
   become: true
   roles:
