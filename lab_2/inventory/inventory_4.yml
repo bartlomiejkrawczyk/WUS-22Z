@@ -24,18 +24,39 @@ all:
           backend_port: 8080
     backend:
       hosts:
-        hostBack:
+        localhost:
           parameters:
+            - backend_port: 8079
+              database_address: 20.4.79.187
+              database_port: 3037
+              database_user: admin
+              database_password: password
+              directory: first
             - backend_port: 8080
               database_address: 20.4.79.187
               database_port: 3036
               database_user: admin
               database_password: password
-              directory: first
+              directory: second
+    nginx:
+      hosts:
+        localhost:
+          nginx_port: 8078
+          read_backend_address: 20.4.76.177
+          read_backend_port: 8080
+          write_backend_address: 20.4.76.177
+          write_backend_port: 8079
     db_master:
       hosts:
         hostDb:
           database_port: 3036
           database_user: admin
           database_password: password
-
+    db_slave:
+      hosts:
+        hostDb:
+          database_port: 3037
+          database_user: admin
+          database_password: password
+          master_database_address: 20.4.79.187
+          master_database_port: 3036

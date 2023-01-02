@@ -22,20 +22,27 @@ all:
           frontend_port: 8080
           backend_address: 20.4.76.177
           backend_port: 8080
-    backend:
+    backend_replicaset:
       hosts:
         hostBack:
-          parameters:
-            - backend_port: 8080
-              database_address: 20.4.79.187
-              database_port: 3036
-              database_user: admin
-              database_password: password
-              directory: first
+          replicaset_port: 8080
+          database_master_address: 20.4.79.187
+          database_master_port: 3036
+          database_slave_address: 20.4.79.187
+          database_slave_port: 3037
+          database_user: admin
+          database_password: password
     db_master:
       hosts:
         hostDb:
           database_port: 3036
           database_user: admin
           database_password: password
-
+    db_slave:
+      hosts:
+        hostDb:
+          database_port: 3037
+          database_user: admin
+          database_password: password
+          master_database_address: 20.4.79.187
+          master_database_port: 3036
