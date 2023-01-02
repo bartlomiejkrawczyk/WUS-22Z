@@ -22,7 +22,7 @@ RESOURCE_GROUP="$(jq -r '.resource_group' "$CONFIG_FILE")"
 echo $RESOURCE_GROUP
 
 # Login
-az login --use-device-code
+az login
 
 # Resource Group
 az group create --name $RESOURCE_GROUP --location westeurope
@@ -147,3 +147,5 @@ for PUBLIC_IP in "${PUBLIC_IPS[@]}"; do
       --query "ipAddress" \
       --output tsv
 done
+
+az sshkey create --name "wusSSHKey" --resource-group "$RESOURCE_GROUP"
