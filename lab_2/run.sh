@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sudo ansible-playbook deploy.yml -vvv
+ansible-playbook deploy.yml -vvv
