@@ -20,7 +20,7 @@ sudo apt install jq -y
 sudo apt-get install azure-cli -y
 
 # Login
-az login
+az login --use-device-code
 
 # Delete
 az group delete --name $RESOURCE_GROUP -y

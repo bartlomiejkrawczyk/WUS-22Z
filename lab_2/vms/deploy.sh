@@ -22,7 +22,7 @@ RESOURCE_GROUP="$(jq -r '.resource_group' "$CONFIG_FILE")"
 echo $RESOURCE_GROUP
 
 # Login
-az login
+az login --use-device-code
 
 # Resource Group
 az group create --name $RESOURCE_GROUP --location westeurope
@@ -131,7 +131,7 @@ for VM in "${VIRTUAL_MACHINES[@]}"; do
         --image UbuntuLTS \
         --no-wait \
         --generate-ssh-keys
-        
+
         # --data-disk-sizes-gb 10 \
         # --size Standard_DS2_v2 \
 done
@@ -147,7 +147,3 @@ for PUBLIC_IP in "${PUBLIC_IPS[@]}"; do
       --query "ipAddress" \
       --output tsv
 done
-
-# Logout
-az logout
-

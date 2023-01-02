@@ -1,0 +1,35 @@
+all:
+  hosts:
+    104.40.186.196:
+      vm_name: front
+      ansible_user: 01158596
+    104.40.187.228:
+      vm_name: back
+      ansible_user: 01158596
+    104.40.185.204:
+      vm_name: database
+      ansible_user: 01158596
+  children:
+    frontend:
+      hosts:
+        104.40.186.196:
+          frontend_port: 8080
+          backend_address: 104.40.187.228
+          backend_port: 8080
+    backend:
+      hosts:
+        104.40.187.228:
+          parameters:
+            - backend_port: 8080
+              database_address: 104.40.185.204
+              database_port: 3036
+              database_user: admin
+              database_password: password
+              directory: first
+    db_master:
+      hosts:
+        104.40.185.204:
+          database_port: 3036
+          database_user: admin
+          database_password: password
+
