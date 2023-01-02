@@ -1,25 +1,25 @@
 - name: Clone spring repository
   ansible.builtin.git:
     repo: https://github.com/spring-petclinic/spring-petclinic-rest.git
-    dest: /root/spring-petclinic-rest/
+    dest: /home/{{ ansible_user }}/spring-petclinic-rest/
     force: yes
 
 - name: Copy prepared backend configuration
   ansible.builtin.copy:
     src: application.properties
-    dest: /root/spring-petclinic-rest/src/main/resources/application.properties
+    dest: /home/{{ ansible_user }}/spring-petclinic-rest/src/main/resources/application.properties
 
 - name: Replace values in configuration
   ansible.builtin.script:
     cmd: back-replicaset.sh {{ replicaset_port }} {{ database_master_address }} {{ database_master_port }} {{ database_slave_address }} {{ database_slave_port }} {{ database_user }} {{ database_password }}
-    chdir: /root/spring-petclinic-rest/src/main/resources/
+    chdir: /home/{{ ansible_user }}/spring-petclinic-rest/src/main/resources/
 
 - name: Test spring application
   ansible.builtin.shell:
     cmd: ./mvnw test
-    chdir: /root/spring-petclinic-rest
+    chdir: /home/{{ ansible_user }}/spring-petclinic-rest
 
 - name: Build spring application
   ansible.builtin.shell:
     cmd: ./mvnw spring-boot:run &
-    chdir: /root/spring-petclinic-rest
+    chdir: /home/{{ ansible_user }}/spring-petclinic-rest

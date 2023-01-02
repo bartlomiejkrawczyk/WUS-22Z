@@ -11,25 +11,25 @@
 - name: Clone spring repository
   ansible.builtin.git:
     repo: https://github.com/spring-petclinic/spring-petclinic-angular.git
-    dest: /root/spring-petclinic-angular/
+    dest: /home/{{ ansible_user }}/spring-petclinic-angular/
     force: yes
 
 - name: Install package manager
   ansible.builtin.script:
     cmd: install.sh
-    chdir: /root/spring-petclinic-angular/
+    chdir: /home/{{ ansible_user }}/spring-petclinic-angular/
 
 - name: Update configuration
   ansible.builtin.script:
     cmd: front.sh {{ backend_address }} {{ backend_port }}
-    chdir: /root/spring-petclinic-angular/
+    chdir: /home/{{ ansible_user }}/spring-petclinic-angular/
 
 - name: Build project
   ansible.builtin.command:
     cmd: npm run build -- --prod
-    chdir: /root/spring-petclinic-angular/
+    chdir: /home/{{ ansible_user }}/spring-petclinic-angular/
 
 - name: Run server
   ansible.builtin.shell:
     cmd: npx angular-http-server --path ./dist -p {{ frontend_port }} &
-    chdir: /root/spring-petclinic-angular/
+    chdir: /home/{{ ansible_user }}/spring-petclinic-angular/

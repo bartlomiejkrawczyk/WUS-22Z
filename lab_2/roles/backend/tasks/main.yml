@@ -1,30 +1,30 @@
 - name: Clone spring repository
   ansible.builtin.git:
     repo: https://github.com/spring-petclinic/spring-petclinic-rest.git
-    dest: /root/WUS-LABY/tmp/{{ item.directory }}/spring-petclinic-rest
+    dest: /home/{{ ansible_user }}/WUS-LABY/tmp/{{ item.directory }}/spring-petclinic-rest
     force: yes
   loop: "{{ parameters }}"
 
 - name: Copy prepared backend configuration
   ansible.builtin.copy:
     src: application.properties
-    dest: /root/WUS-LABY/tmp/{{ item.directory }}/spring-petclinic-rest/src/main/resources/application.properties
+    dest: /home/{{ ansible_user }}/WUS-LABY/tmp/{{ item.directory }}/spring-petclinic-rest/src/main/resources/application.properties
   loop: "{{ parameters }}"
 
 - name: Replace values in configuration
   ansible.builtin.script:
     cmd: back.sh {{ item.backend_port }} {{ item.database_address }} {{ item.database_port }} {{ item.database_user }} {{ item.database_password }}
-    chdir: /root/WUS-LABY/tmp/{{ item.directory }}/spring-petclinic-rest/src/main/resources/
+    chdir: /home/{{ ansible_user }}/WUS-LABY/tmp/{{ item.directory }}/spring-petclinic-rest/src/main/resources/
   loop: "{{ parameters }}"
 
 - name: Test spring application
   ansible.builtin.shell:
     cmd: ./mvnw test
-    chdir: /root/WUS-LABY/tmp/{{ item.directory }}/spring-petclinic-rest
+    chdir: /home/{{ ansible_user }}/WUS-LABY/tmp/{{ item.directory }}/spring-petclinic-rest
   loop: "{{ parameters }}"
 
 - name: Build spring application
   ansible.builtin.shell:
     cmd: ./mvnw spring-boot:run &
-    chdir: /root/WUS-LABY/tmp/{{ item.directory }}/spring-petclinic-rest
+    chdir: /home/{{ ansible_user }}/WUS-LABY/tmp/{{ item.directory }}/spring-petclinic-rest
   loop: "{{ parameters }}"
