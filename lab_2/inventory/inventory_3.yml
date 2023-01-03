@@ -2,25 +2,25 @@ all:
   hosts:
     hostFront:
       vm_name: front
-      ansible_user: bartlomiejkrawczyk
-      ansible_ssh_private_key_file: /home/bartlomiejkrawczyk/.ssh/1672691168_314986.pub
-      ansible_host: 20.229.137.56
+      ansible_user: <AZURE_USER>
+      ansible_ssh_private_key_file: <PUBLIC_KEY>
+      ansible_host: <FRONT_IP>
     hostBack:
       vm_name: back
-      ansible_user: bartlomiejkrawczyk
-      ansible_ssh_private_key_file: /home/bartlomiejkrawczyk/.ssh/1672691168_314986.pub
-      ansible_host: 20.4.76.177
+      ansible_user: <AZURE_USER>
+      ansible_ssh_private_key_file: <PUBLIC_KEY>
+      ansible_host: <BACK_IP>
     hostDb:
       vm_name: database
-      ansible_user: bartlomiejkrawczyk
-      ansible_ssh_private_key_file: /home/bartlomiejkrawczyk/.ssh/1672691168_314986.pub
-      ansible_host: 20.4.79.187
+      ansible_user: <AZURE_USER>
+      ansible_ssh_private_key_file: <PUBLIC_KEY>
+      ansible_host: <DATABASE_IP>
   children:
     frontend:
       hosts:
         hostFront:
           frontend_port: 8080
-          backend_address: 20.4.76.177
+          backend_address: <BACK_IP>
           backend_port: 8080
     backend_replicaset:
       hosts:
