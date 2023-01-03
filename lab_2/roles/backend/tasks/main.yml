@@ -24,7 +24,9 @@
   loop: "{{ parameters }}"
 
 - name: Build spring application
+  async: 3600
+  poll: 0
   ansible.builtin.shell:
-    cmd: ./mvnw spring-boot:run &
+    cmd: ./mvnw spring-boot:run
     chdir: /home/{{ ansible_user }}/WUS-LABY/tmp/{{ item.directory }}/spring-petclinic-rest
   loop: "{{ parameters }}"

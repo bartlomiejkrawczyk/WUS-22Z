@@ -20,6 +20,8 @@
     chdir: /home/{{ ansible_user }}/spring-petclinic-rest
 
 - name: Build spring application
+  async: 3600
+  poll: 0
   ansible.builtin.shell:
-    cmd: ./mvnw spring-boot:run &
+    cmd: ./mvnw spring-boot:run
     chdir: /home/{{ ansible_user }}/spring-petclinic-rest
