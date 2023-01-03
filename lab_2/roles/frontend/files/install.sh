@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -x
 
 if [ "$#" -ne 1 ]; then
     echo "Usage: $0 FRONTEND_PORT" >&2
@@ -26,10 +27,4 @@ cd spring-petclinic-angular/
 
 npm install
 
-nohup ng serve --host 0.0.0.0 --port ${frontend_port} 1>/dev/null 2>/dev/null &
-
-# npm run build -- --prod
-
-# nohup npx angular-http-server --path ./dist -p "$1" &
-
-echo DONE
+ng serve --host 0.0.0.0 --port "$1"
