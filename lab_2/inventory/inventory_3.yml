@@ -26,9 +26,9 @@ all:
       hosts:
         hostBack:
           replicaset_port: 8080
-          database_master_address: 20.4.79.187
+          database_master_address: 10.0.3.10
           database_master_port: 3036
-          database_slave_address: 20.4.79.187
+          database_slave_address: 10.0.2.10
           database_slave_port: 3037
           database_user: admin
           database_password: password
@@ -40,9 +40,9 @@ all:
           database_password: password
     db_slave:
       hosts:
-        hostDb:
+        hostBack:
           database_port: 3037
           database_user: admin
           database_password: password
-          master_database_address: 20.4.79.187
+          master_database_address: 10.0.3.10
           master_database_port: 3036
