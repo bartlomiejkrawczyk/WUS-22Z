@@ -1,12 +1,26 @@
-- name: Ensures db_slave dir exists
-  file: path=/db_slave/ state=directory
-- name: Copy slave DB Dockerfile
+- name: Create target directory
+  file: path=/home/{{ ansible_user }}/slave/ state=directory mode=0755
+
+- name: Copy sql.sh
   ansible.builtin.copy:
-    src: ./db/
-    dest: /db_slave/
-- name: Stop existing slave DB container
-  shell: docker stop wus-db-slave || true
-- name: Build slave DB image
-  command: docker build -t wus-db-slave /db_slave
-- name: Run slave DB image
-  command: docker run --rm -d -p {{ db_slave_port }}:3306 --name wus-db-slave wus-db-slave
+    src: sql.sh
+    dest: /home/{{ ansible_user }}/slave/sql.sh
+    mode: 'u+x,g+x'
+
+- name: Run sql.sh
+  ansible.builtin.shell:
+    cmd: ./sql.sh {{ database_port }} {{ database_user }} {{ database_password }} {{ master_database_address }} {{ master_database_port }}
+    chdir: /home/{{ ansible_user }}/slave/
+
+# - name: Ensures db_slave dir exists
+#   file: path=/db_slave/ state=directory
+# - name: Copy slave DB Dockerfile
+#   ansible.builtin.copy:
+#     src: ./db/
+#     dest: /db_slave/
+# - name: Stop existing slave DB container
+#   shell: docker stop wus-db-slave || true
+# - name: Build slave DB image
+#   command: docker build -t wus-db-slave /db_slave
+# - name: Run slave DB image
+#   command: docker run --rm -d -p {{ db_slave_port }}:3306 --name wus-db-slave wus-db-slave

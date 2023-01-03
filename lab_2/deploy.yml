@@ -13,6 +13,11 @@
       apt:
         upgrade: dist
 
+- hosts: 
+  - frontend
+  roles:
+    - frontend
+
 - hosts:
   - db_master
   - db_slave
@@ -56,8 +61,3 @@
   become: true
   roles:
     - nginx
-
-- hosts: 
-  - frontend
-  roles:
-    - frontend
