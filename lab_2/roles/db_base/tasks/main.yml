@@ -1,17 +1,42 @@
-- name: Install docker
-  apt:
-    name: docker
-    state: latest
-- name: Install docker.io
-  apt:
-    name: docker.io
-    state: latest
-- name: Addgroup docker
-  ansible.builtin.group:
-    name: docker
-    state: present
-- name: Add {{ database_user }} to docker group
-  command: usermod -aG docker {{ database_user }}
-- name: reset ssh connection
-  meta: reset_connection
-  become: no
+# - name: Install mysql-server
+#   apt:
+#     name: mysql-server
+#     state: latest
+
+# - name: Install docker
+#   apt:
+#     name: docker
+#     state: latest
+
+# - name: Install docker.io
+#   apt:
+#     name: docker.io
+#     state: latest
+
+# - name: Addgroup docker
+#   ansible.builtin.group:
+#     name: docker
+#     state: present
+
+# - name: Install docker-compose
+#   get_url: 
+#     url : https://github.com/docker/compose/releases/download/1.25.1-rc1/docker-compose-Linux-x86_64
+#     dest: /usr/local/bin/docker-compose
+#     mode: 'u+x,g+x'
+
+# - name: Copy install.sh
+#   ansible.builtin.copy:
+#     src: install.sh
+#     dest: /home/{{ ansible_user }}/install.sh
+#     mode: 'u+x,g+x'
+
+# - name: Install docker compose
+#   become: true
+#   ansible.builtin.command:
+#     cmd: ./install.sh
+#     chdir: /home/{{ ansible_user }}/
+
+
+# - name: Test docker compose
+#   ansible.builtin.command:
+#     cmd: docker-compose --version

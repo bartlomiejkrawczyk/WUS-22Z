@@ -1,12 +1,62 @@
-- name: Ensures db_master dir exists
-  file: path=/db_master/ state=directory
-- name: Copy master DB Dockerfile
+- name: Create target directory
+  file: path=/home/{{ ansible_user }}/master/ state=directory mode=0755
+
+- name: Copy sql.sh
   ansible.builtin.copy:
-    src: ./db/
-    dest: /db_master/
-- name: Stop existing master DB container
-  shell: docker stop wus-db-master || true
-- name: Build master DB image
-  command: docker build -t wus-db-master /db_master
-- name: Run master DB image
-  command: docker run --rm -d -p {{ database_port }}:3306 --name wus-db-master wus-db-master
+    src: sql.sh
+    dest: /home/{{ ansible_user }}/master/sql.sh
+    mode: 'u+x,g+x'
+
+- name: Run sql.sh
+  ansible.builtin.shell:
+    cmd: ./sql.sh {{ database_port }} {{ database_user }} {{ database_password }}
+    chdir: /home/{{ ansible_user }}/master/
+
+# - name: Copy docker-compose.yml
+#   ansible.builtin.copy:
+#     src: docker-compose.yml
+#     dest: /home/{{ ansible_user }}/master/docker-compose.yml
+
+# - name: Copy initDB.sql
+#   ansible.builtin.copy:
+#     src: initDB.sql
+#     dest: /home/{{ ansible_user }}/master/initDB.sql
+
+# - name: Copy populateDB.sql
+#   ansible.builtin.copy:
+#     src: populateDB.sql
+#     dest: /home/{{ ansible_user }}/master/populateDB.sql
+
+# - name: Replace values in configuration
+#   ansible.builtin.script:
+#     cmd: database.sh {{ database_port }} {{ database_user }} {{ database_password }}
+#     chdir: /home/{{ ansible_user }}/master/
+
+# # - name: Run docker-compose
+# #   ansible.builtin.command:
+# #     cmd: docker-compose up -d
+# #     chdir: /home/{{ ansible_user }}/master/
+
+# - name: Init database
+#   become: true
+#   ansible.builtin.script:
+#     cmd: mysql -f < ./initDB.sql
+#     chdir: /home/{{ ansible_user }}/master/
+
+# - name: Populate database
+#   become: true
+#   ansible.builtin.script:
+#     cmd: mysql -f < ./populateDB.sql
+#     chdir: /home/{{ ansible_user }}/master/
+
+# - name: Restart service
+#   become: true
+#   ansible.builtin.script:
+#     cmd: service mysql restart
+#     chdir: /home/{{ ansible_user }}/master/
+
+# - name: Unlock tables
+#   become: true
+#   ansible.builtin.script:
+#     cmd: mysql -v -e "UNLOCK TABLES;"
+#     chdir: /home/{{ ansible_user }}/master/
