@@ -3,49 +3,49 @@ all:
     hostFront:
       vm_name: front
       ansible_user: bartlomiejkrawczyk
-      ansible_ssh_private_key_file: /home/bartlomiejkrawczyk/.ssh/1672691168_314986.pub
-      ansible_host: 20.229.137.56
+      ansible_ssh_private_key_file: /home/bartlomiejkrawczyk/.ssh/1672768890_0032237.pub
+      ansible_host: 40.115.33.95
     hostBack:
       vm_name: back
       ansible_user: bartlomiejkrawczyk
-      ansible_ssh_private_key_file: /home/bartlomiejkrawczyk/.ssh/1672691168_314986.pub
-      ansible_host: 20.4.76.177
+      ansible_ssh_private_key_file: /home/bartlomiejkrawczyk/.ssh/1672768890_0032237.pub
+      ansible_host: 13.81.252.250
     hostDb:
       vm_name: database
       ansible_user: bartlomiejkrawczyk
-      ansible_ssh_private_key_file: /home/bartlomiejkrawczyk/.ssh/1672691168_314986.pub
-      ansible_host: 20.4.79.187
+      ansible_ssh_private_key_file: /home/bartlomiejkrawczyk/.ssh/1672768890_0032237.pub
+      ansible_host: 13.94.215.191
   children:
     frontend:
       hosts:
         hostFront:
           frontend_port: 8080
-          backend_address: 20.4.76.177
-          backend_port: 8080
+          backend_address: 40.115.33.95
+          backend_port: 8078
+    nginx:
+      hosts:
+        hostFront:
+          nginx_port: 8078
+          read_backend_address: 10.0.2.10
+          read_backend_port: 8080
+          write_backend_address: 10.0.2.10
+          write_backend_port: 8079
     backend:
       hosts:
-        localhost:
+        hostBack:
           parameters:
             - backend_port: 8079
-              database_address: 20.4.79.187
+              database_address: 10.0.2.10
               database_port: 3037
               database_user: admin
               database_password: password
               directory: first
             - backend_port: 8080
-              database_address: 20.4.79.187
+              database_address: 10.0.3.10
               database_port: 3036
               database_user: admin
               database_password: password
               directory: second
-    nginx:
-      hosts:
-        localhost:
-          nginx_port: 8078
-          read_backend_address: 20.4.76.177
-          read_backend_port: 8080
-          write_backend_address: 20.4.76.177
-          write_backend_port: 8079
     db_master:
       hosts:
         hostDb:
@@ -54,9 +54,9 @@ all:
           database_password: password
     db_slave:
       hosts:
-        hostDb:
+        hostBack:
           database_port: 3037
           database_user: admin
           database_password: password
-          master_database_address: 20.4.79.187
+          master_database_address: 10.0.3.10
           master_database_port: 3036

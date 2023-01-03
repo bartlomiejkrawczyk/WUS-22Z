@@ -19,15 +19,6 @@ USER_DATABASE="https://raw.githubusercontent.com/bartlomiejkrawczyk/WUS-22Z/mast
 INIT_DATABASE="https://raw.githubusercontent.com/spring-petclinic/spring-petclinic-rest/master/src/main/resources/db/mysql/initDB.sql"
 POPULATE_DATABASE="https://raw.githubusercontent.com/spring-petclinic/spring-petclinic-rest/master/src/main/resources/db/mysql/populateDB.sql"
 
-cd ~/
-
-# Instalation
-sudo apt-get update
-sudo apt-get upgrade -y
-sudo apt-get autoremove -y
-
-sudo apt-get install mysql-server -y
-sudo apt-get install wget -y
 
 # Download config files
 wget $USER_DATABASE
