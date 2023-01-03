@@ -1,12 +1,20 @@
 - name: Install curl
+  become: true
   apt:
     name: curl
     state: latest
 
-- name: Install npm
-  apt:
-    name: npm
-    state: latest
+# - name: Install npm
+#   apt:
+#     name: npm
+#     state: latest
+
+# - name: Install package manager 3
+#   become: false
+#   become_user: "{{ ansible_user }}"
+#   ansible.builtin.shell:
+#     cmd: nvm install 12.11.1
+#     chdir: /home/{{ ansible_user }}/
 
 - name: Clone spring repository
   ansible.builtin.git:
@@ -14,22 +22,92 @@
     dest: /home/{{ ansible_user }}/spring-petclinic-angular/
     force: yes
 
-- name: Install package manager
-  ansible.builtin.script:
-    cmd: install.sh
-    chdir: /home/{{ ansible_user }}/spring-petclinic-angular/
+# - name: Install package manager 1
+#   ansible.builtin.shell:
+#     cmd: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
+#     chdir: /home/{{ ansible_user }}/
 
 - name: Update configuration
   ansible.builtin.script:
     cmd: front.sh {{ backend_address }} {{ backend_port }}
     chdir: /home/{{ ansible_user }}/spring-petclinic-angular/
 
-- name: Build project
-  ansible.builtin.command:
-    cmd: npm run build -- --prod
-    chdir: /home/{{ ansible_user }}/spring-petclinic-angular/
+- name: Install package manager and deploy application
+  ansible.builtin.script:
+    cmd: install.sh {{ frontend_port }}
+    chdir: /home/{{ ansible_user }}/
 
-- name: Run server
-  ansible.builtin.shell:
-    cmd: npx angular-http-server --path ./dist -p {{ frontend_port }} &
-    chdir: /home/{{ ansible_user }}/spring-petclinic-angular/
+# - name: reset ssh connection
+#   meta: reset_connection
+#   become: no
+
+# - name: Install package manager 3
+#   become: false
+#   become_user: "{{ ansible_user }}"
+#   ansible.builtin.shell:
+#     cmd: npm install -g @angular/cli
+#     chdir: /home/{{ ansible_user }}/
+
+# - name: Install package manager 4
+#   become: false
+#   become_user: "{{ ansible_user }}"
+#   ansible.builtin.shell:
+#     cmd: npm install --save-dev @angular/cli@latest
+#     chdir: /home/{{ ansible_user }}/
+
+
+# - name: Install package manager 5
+#   become: false
+#   become_user: "{{ ansible_user }}"
+#   ansible.builtin.shell:
+#     cmd: npm install angular-http-server
+#     chdir: /home/{{ ansible_user }}/
+
+# - name: Install package manager 3
+#   become: false
+#   become_user: "{{ ansible_user }}"
+#   ansible.builtin.shell:
+#     cmd: nvm install 12.11.1
+#     chdir: /home/{{ ansible_user }}/
+
+# - name: Install package manager 4
+#   become: true
+#   become_user: "{{ ansible_user }}"
+#   ansible.builtin.shell:
+#     cmd: echo N | sudo npm install -g @angular/cli@11.2.19
+#     chdir: /home/{{ ansible_user }}/spring-petclinic-angular/
+
+
+# - name: Update configuration
+#   ansible.builtin.script:
+#     cmd: front.sh {{ backend_address }} {{ backend_port }}
+#     chdir: /home/{{ ansible_user }}/spring-petclinic-angular/
+
+# - name: Install package manager 5
+#   become: false
+#   become_user: "{{ ansible_user }}"
+#   ansible.builtin.shell:
+#     cmd: echo N | npm install
+#     chdir: /home/{{ ansible_user }}/spring-petclinic-angular/
+
+# - name: Install package manager 6
+#   become: false
+#   become_user: "{{ ansible_user }}"
+#   ansible.builtin.shell:
+#     cmd: echo N | ng analytics off
+#     chdir: /home/{{ ansible_user }}/spring-petclinic-angular/
+
+
+# - name: Build project
+#   become: false
+#   become_user: "{{ ansible_user }}"
+#   ansible.builtin.shell:
+#     cmd: npm run build -- --prod
+#     chdir: /home/{{ ansible_user }}/spring-petclinic-angular/
+
+# - name: Run server
+#   become: false
+#   become_user: "{{ ansible_user }}"
+#   ansible.builtin.shell:
+#     cmd: npx angular-http-server --path ./dist -p {{ frontend_port }} &
+#     chdir: /home/{{ ansible_user }}/spring-petclinic-angular/
