@@ -14,11 +14,9 @@ az aks create --resource-group $RESOURCE_GROUP \
     --name wusCluster \
     --enable-managed-identity \
     --node-count 2 \
-    --enable-addons monitoring \
-    --enable-msi-auth-for-monitoring  \
     --generate-ssh-keys
 
-sudo az aks install-cli
+# sudo az aks install-cli
 
 az aks get-credentials \
     --resource-group $RESOURCE_GROUP \
