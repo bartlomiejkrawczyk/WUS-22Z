@@ -8,7 +8,7 @@ metadata:
   name: customers-service
   namespace: spring-petclinic
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: customers-service
@@ -41,7 +41,6 @@ spec:
           limits:
             memory: 1Gi
           requests:
-            cpu: 2000m
             memory: 1Gi
         env:
         - name: SPRING_PROFILES_ACTIVE

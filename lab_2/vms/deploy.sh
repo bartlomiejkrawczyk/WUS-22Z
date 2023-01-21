@@ -148,4 +148,4 @@ for PUBLIC_IP in "${PUBLIC_IPS[@]}"; do
       --output tsv
 done
 
-az sshkey create --name "wusSSHKey" --resource-group "$RESOURCE_GROUP"
+#az sshkey create --name "wusSSHKey" --resource-group "$RESOURCE_GROUP"
